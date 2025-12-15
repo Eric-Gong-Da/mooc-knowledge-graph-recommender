@@ -1,0 +1,114 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{caption}
+
+\title{Runtime Complexity Analysis of MOOC Recommendation System}
+\author{
+    Gong Da, Li Haolin, Chan Cheuk Ying, Chan Ka Man, Zhu Jiayin \\
+    The Education University of Hong Kong \\
+    \texttt{\{s1153651,s1153657,s1155604,s1155229,s1153658\}@s.eduhk.hk}
+}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This report presents a comprehensive runtime complexity analysis of a MOOC recommendation system based on knowledge graph embeddings. We analyze the asymptotic performance of four key components: knowledge graph construction, meta-path random walk generation, embedding training, and KNN recommendation generation. Our empirical evaluation confirms the theoretical complexity bounds and provides insights into system scalability.
+\end{abstract}
+
+\section{Introduction}
+
+Understanding the runtime complexity of algorithms is crucial for building scalable recommendation systems. This report analyzes the computational complexity of our MOOC recommendation system, which consists of four main components:
+
+\begin{enumerate}
+    \item Knowledge graph construction from raw relational data
+    \item Meta-path random walk generation on the knowledge graph
+    \item Word2Vec embedding training from random walks
+    \item KNN-based recommendation generation
+\end{enumerate}
+
+Each component's complexity is analyzed theoretically and empirically validated through controlled experiments.
+
+\section{Theoretical Analysis}
+
+\subsection{Knowledge Graph Construction}
+
+The knowledge graph construction phase processes raw relational data to generate structured triples. Given $E$ relationships in the dataset, each relationship is processed exactly once to create a triple.
+
+\textbf{Time Complexity: } $\mathcal{O}(E)$
+
+Where $E$ is the number of relationships in the input data.
+
+\subsection{Meta-Path Random Walk Generation}
+
+Random walk generation involves traversing the knowledge graph following specific meta-paths. For a system with $U$ users, generating $W$ walks per user, each of length $L$, with an average graph degree of $D$:
+
+\textbf{Time Complexity: } $\mathcal{O}(U \times W \times L \times D)$
+
+\subsection{Embedding Training}
+
+Word2Vec training processes sequences of tokens to learn vector representations. With $W$ walks, average length $L$, and vocabulary size $V$:
+
+\textbf{Time Complexity: } $\mathcal{O}(W \times L \times V)$
+
+\subsection{KNN Recommendation}
+
+KNN recommendation finds similar users based on embeddings. With $N$ users and $D$ embedding dimensions, using efficient tree-based algorithms:
+
+\textbf{Time Complexity: } $\mathcal{O}(N \times \log(N) \times D)$ for fitting, $\mathcal{O}(\log(N) \times D)$ for queries
+
+\section{Empirical Validation}
+
+We conducted experiments to validate our theoretical analysis by measuring execution times with varying input sizes.
+
+\subsection{Experimental Setup}
+
+For each component, we generated synthetic datasets with controlled scaling factors and measured execution times. All experiments were conducted on identical hardware to ensure consistency.
+
+\subsection{Results}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.45\textwidth]{results/kg_complexity.png}
+    \includegraphics[width=0.45\textwidth]{results/random_walk_complexity.png}
+    \includegraphics[width=0.45\textwidth]{results/embedding_complexity.png}
+    \includegraphics[width=0.45\textwidth]{results/knn_complexity.png}
+    \caption{Runtime complexity analysis of system components}
+    \label{fig:complexity}
+\end{figure}
+
+Figure \ref{fig:complexity} shows the empirical results:
+
+\begin{enumerate}
+    \item \textbf{Knowledge Graph Construction}: Linear growth with number of entities, confirming $\mathcal{O}(E)$ complexity.
+    \item \textbf{Random Walk Generation}: Quadratic growth with user count, consistent with $\mathcal{O}(U \times W \times L \times D)$.
+    \item \textbf{Embedding Training}: Cubic growth pattern, validating $\mathcal{O}(W \times L \times V)$ complexity.
+    \item \textbf{KNN Recommendation}: Near-logarithmic growth, supporting $\mathcal{O}(N \times \log(N) \times D)$ efficiency.
+\end{enumerate}
+
+\section{Discussion}
+
+The empirical results align well with theoretical predictions. The embedding training component dominates overall runtime due to its cubic complexity, especially as vocabulary size grows. The KNN component scales efficiently thanks to tree-based optimizations.
+
+For production deployment, several optimization strategies can improve performance:
+
+\begin{itemize}
+    \item \textbf{Caching}: Store computed embeddings to avoid retraining
+    \item \textbf{Approximate Algorithms}: Use ANN libraries like FAISS for large-scale similarity search
+    \item \textbf{Parallelization}: Distribute random walk generation across multiple cores
+    \item \textbf{Incremental Updates}: Update knowledge graphs incrementally rather than rebuilding
+\end{itemize}
+
+\section{Conclusion}
+
+This analysis provides a comprehensive understanding of the computational complexity of our MOOC recommendation system. The theoretical bounds are validated empirically, offering guidance for system optimization and scalability planning. The embedding training component requires the most attention for optimization in large-scale deployments.
+
+\end{document}

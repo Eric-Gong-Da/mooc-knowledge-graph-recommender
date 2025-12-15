@@ -113,6 +113,7 @@ We performed a comprehensive runtime complexity analysis of each system componen
 4. **KNN Recommendation**: O(N × log(N) × D) for efficient implementations where N=users, D=embedding dimension
 
 Detailed analysis results and visualizations are available in:
+- `complexity_analysis/report.pdf` (Dedicated complexity analysis report with Big O notation)
 - `docs/paper.pdf` (Academic paper with complexity analysis section)
 - `complexity_analysis/results/` (Generated plots and detailed report)
 
