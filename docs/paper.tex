@@ -86,6 +86,61 @@ We evaluate our recommendation system using standard metrics including precision
 \section{Results and Discussion}
 Experimental results demonstrate that our knowledge graph embedding-based approach provides effective MOOC recommendations. The meta-path random walk strategy successfully captures semantic relationships in the learning environment, leading to more relevant recommendations compared to traditional collaborative filtering methods.
 
+\section{Complexity Analysis}
+To understand the scalability of our system, we performed a comprehensive runtime complexity analysis of each component. Figure \ref{fig:complexity} shows how execution time grows with input size for each major component.
+
+\subsection{Knowledge Graph Construction}
+The knowledge graph construction phase has a time complexity of O(E), where E is the number of relationships in the dataset. This linear complexity arises because the algorithm processes each relationship exactly once to convert it into a knowledge graph triple. As shown in our analysis, the execution time scales linearly with the number of entities in the system.
+
+\subsection{Meta-Path Random Walk Generation}
+The random walk generation has a time complexity of O(U × W × L × D), where:
+\begin{itemize}
+    \item U is the number of users
+    \item W is the number of walks per user
+    \item L is the length of each walk
+    \item D is the average degree in the graph
+\end{itemize}
+
+This complexity reflects the nested iteration required to generate walks for each user, with each step requiring traversal to connected nodes in the graph.
+
+\subsection{Embedding Training}
+The Word2Vec embedding training has a time complexity of O(W × L × V), where:
+\begin{itemize}
+    \item W is the number of walks
+    \item L is the average length of walks
+    \item V is the size of the vocabulary
+\end{itemize}
+
+This cubic relationship explains why embedding training dominates the overall runtime, especially as datasets grow larger. The training time increases significantly with vocabulary size, which grows with the diversity of entities in the knowledge graph.
+
+\subsection{KNN Recommendation}
+The KNN recommendation generation has a time complexity of O(N × log(N) × D) for efficient implementations, where:
+\begin{itemize}
+    \item N is the number of users
+    \item D is the dimension of embeddings
+\end{itemize}
+
+Modern implementations using ball trees or KD-trees achieve logarithmic scaling for nearest neighbor searches, making recommendation generation efficient even for large user bases.
+
+\subsection{Optimization Strategies}
+For practical deployment, several optimization strategies can improve system performance:
+\begin{itemize}
+    \item Caching computed embeddings to avoid retraining
+    \item Using approximate nearest neighbor algorithms for large-scale KNN
+    \item Parallelizing random walk generation across multiple cores
+    \item Implementing incremental KG updates instead of full reconstruction
+\end{itemize}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.45\textwidth]{../complexity_analysis/results/kg_complexity.png}
+\includegraphics[width=0.45\textwidth]{../complexity_analysis/results/random_walk_complexity.png}
+\includegraphics[width=0.45\textwidth]{../complexity_analysis/results/embedding_complexity.png}
+\includegraphics[width=0.45\textwidth]{../complexity_analysis/results/knn_complexity.png}
+\caption{Runtime complexity analysis of system components}
+\label{fig:complexity}
+\end{figure}
+
 \section{Conclusion}
 In this paper, we presented a MOOC recommendation system based on knowledge graph embeddings. Our approach leverages meta-path random walks on a heterogeneous knowledge graph to learn meaningful representations of users and content. The experimental results validate the effectiveness of our method in providing personalized course recommendations. Future work includes exploring additional meta-paths, incorporating temporal information, and extending the approach to other educational recommendation scenarios.
 
@@ -96,7 +151,7 @@ This work was conducted as part of the INT3086 course requirements at The Educat
 \begin{thebibliography}{1}
 \bibitem{kg} Zhao, H., Zhang, X., Ren, Z., \& Tang, J. (2019). Learning graph embedding with adversarial training methods. \textit{IEEE Transactions on Cybernetics}, 50(8), 3582-3593.
 
-\bibitem{mooc} Luo, J., Wang, Y., Yang, Q., & Wang, D. (2020). MOOCCube: A Large-scale Data Repository for Educational Research. \textit{arXiv preprint arXiv:2005.02213}.
+\bibitem{mooc} Luo, J., Wang, Y., Yang, Q., \& Wang, D. (2020). MOOCCube: A Large-scale Data Repository for Educational Research. \textit{arXiv preprint arXiv:2005.02213}.
 
 \bibitem{rw} Sun, Y., Han, J., Yan, X., Yu, P. S., \& Wu, T. (2011). PathSim: meta path-based top-k similarity search in heterogeneous information networks. \textit{Proceedings of the VLDB Endowment}, 4(11), 992-1003.
 

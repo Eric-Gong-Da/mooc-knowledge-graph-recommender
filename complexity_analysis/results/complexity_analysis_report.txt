@@ -1,0 +1,72 @@
+MOOC Recommendation System - Runtime Complexity Analysis Report
+================================================================================
+
+1. KNOWLEDGE GRAPH TRIPLE GENERATION
+----------------------------------------
+Complexity: O(E) where E is the number of relationships
+This step processes all user-video and video-concept relationships
+to convert them into knowledge graph triples.
+
+Results:
+  Size Factor 1: 180 entities, 0.0143s
+  Size Factor 2: 360 entities, 0.0250s
+  Size Factor 3: 540 entities, 0.0380s
+  Size Factor 4: 720 entities, 0.0482s
+  Size Factor 5: 900 entities, 0.0579s
+
+2. META-PATH RANDOM WALK GENERATION
+----------------------------------------
+Complexity: O(U × W × L × D) where:
+  U = Number of users
+  W = Number of walks per user
+  L = Length of each walk
+  D = Average degree in the graph
+
+Results:
+  Size Factor 1: 100 users, 0.0050s
+  Size Factor 2: 200 users, 0.0100s
+  Size Factor 3: 300 users, 0.0150s
+  Size Factor 4: 400 users, 0.0183s
+  Size Factor 5: 500 users, 0.0250s
+
+3. EMBEDDING TRAINING (WORD2VEC)
+----------------------------------------
+Complexity: O(W × L × V) where:
+  W = Number of walks
+  L = Average length of walks
+  V = Size of vocabulary
+
+Results:
+  Size Factor 1: 1000 walks, 0.0850s
+  Size Factor 2: 2000 walks, 0.3201s
+  Size Factor 3: 3000 walks, 0.7250s
+  Size Factor 4: 4000 walks, 1.2850s
+  Size Factor 5: 5000 walks, 2.0051s
+
+4. KNN RECOMMENDATION GENERATION
+----------------------------------------
+Complexity: O(N × log(N) × D) for efficient implementations where:
+  N = Number of users
+  D = Dimension of embeddings
+Query time complexity: O(log(N) × D)
+
+Results:
+  Size Factor 1: 100 users, 0.9500s
+  Size Factor 2: 200 users, 0.0007s
+  Size Factor 3: 300 users, 0.0006s
+  Size Factor 4: 400 users, 0.0005s
+  Size Factor 5: 500 users, 0.0006s
+
+OVERALL SYSTEM COMPLEXITY
+----------------------------------------
+The overall complexity of the recommendation system is dominated by:
+1. Embedding training: O(W × L × V)
+2. KNN fitting: O(N × log(N) × D)
+3. KG construction: O(E)
+4. Random walk generation: O(U × W × L × D)
+
+For practical deployment, the system should be optimized by:
+- Caching computed embeddings
+- Using approximate nearest neighbor algorithms for large-scale KNN
+- Parallelizing random walk generation
+- Incremental KG updates instead of full reconstruction

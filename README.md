@@ -20,7 +20,12 @@ mooc_recommendation_system/
 │   ├── random_walk_embedding.py     # Generate embeddings using meta-path random walks
 │   ├── knn_course_recommendation.py # KNN-based course recommendation
 │   └── knn_rf_recommendation.py     # Combined KNN + Random Forest recommendation
-├── docs/                  # Documentation
+├── docs/                  # Documentation and academic paper
+│   ├── paper.tex          # LaTeX source for academic paper
+│   └── paper.pdf          # Compiled academic paper with complexity analysis
+├── complexity_analysis/   # Runtime complexity analysis
+│   ├── analyze_complexity.py        # Script to evaluate runtime complexity
+│   └── results/           # Generated plots and analysis report
 └── README.md              # This file
 ```
 
@@ -97,6 +102,19 @@ Or for combined KNN + Random Forest approach:
 ```bash
 python src/knn_rf_recommendation.py
 ```
+
+## Complexity Analysis
+
+We performed a comprehensive runtime complexity analysis of each system component:
+
+1. **Knowledge Graph Construction**: O(E) where E is the number of relationships
+2. **Meta-Path Random Walk Generation**: O(U × W × L × D) where U=users, W=walks per user, L=walk length, D=average degree
+3. **Embedding Training**: O(W × L × V) where W=walks, L=average walk length, V=vocabulary size
+4. **KNN Recommendation**: O(N × log(N) × D) for efficient implementations where N=users, D=embedding dimension
+
+Detailed analysis results and visualizations are available in:
+- `docs/paper.pdf` (Academic paper with complexity analysis section)
+- `complexity_analysis/results/` (Generated plots and detailed report)
 
 ## Evaluation
 
